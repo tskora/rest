@@ -64,7 +64,6 @@ public class ParticipantRestController {
 		if (oldParticipant == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		if 
 		participantService.updateParticipant(oldParticipant, participantUpdate);
 		return new ResponseEntity<Participant>(participantUpdate, HttpStatus.OK);
 	}
