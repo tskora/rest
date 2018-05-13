@@ -38,9 +38,12 @@ public class ParticipantService {
         session.getTransaction().commit();
 	}
 
-	public void updateParticipant(Participant oldParticipant, Participant participantUpdate) {
-		deleteParticipant(oldParticipant);
-		createParticipant(participantUpdate);
+	public void updateParticipant(Participant oldParticipant, Participant participantUpdate) {	
+		Session session = connector.getSession();
+		session.beginTransaction();
+        session.delete(oldParticipant);
+        session.save(participantUpdate);
+        session.getTransaction().commit();
 	}
 
 }

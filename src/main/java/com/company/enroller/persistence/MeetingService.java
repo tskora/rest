@@ -24,15 +24,28 @@ public class MeetingService {
 	}
 
 	public Meeting findById(long id) {
-		String hql = "FROM Meeting WHERE id ="+id;
-		Query query = connector.getSession().createQuery(hql);
-		return (Meeting) query.list().get(0);
+		return (Meeting) connector.getSession().get(Meeting.class, id);
 	}
 
 	public void createMeeting(Meeting meeting) {
 		Session session = connector.getSession();
 		session.beginTransaction();
         session.save(meeting);
+        session.getTransaction().commit();
+	}
+	
+	public void deleteMeeting(Meeting meeting) {
+		Session session = connector.getSession();
+		session.beginTransaction();
+        session.delete(meeting);
+        session.getTransaction().commit();
+	}
+	
+	public void updateMeeting(Meeting oldMeeting, Meeting meetingUpdate) {	
+		Session session = connector.getSession();
+		session.beginTransaction();
+        session.delete(oldMeeting);
+        session.save(meetingUpdate);
         session.getTransaction().commit();
 	}
 
