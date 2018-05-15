@@ -66,12 +66,8 @@ public class MeetingRestController {
 		if (oldMeeting == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		for (Meeting m : meetingService.getAll()) {
-			if(m.equals(meetingUpdate)) {
-				return new ResponseEntity(HttpStatus.CONFLICT);
-			}
-		}
-		meetingService.updateMeeting(oldMeeting, meetingUpdate);
+		meetingUpdate.setId(id);
+		meetingService.updateMeeting(meetingUpdate);
 		return new ResponseEntity<Meeting>(meetingUpdate, HttpStatus.OK);
 	}
 
