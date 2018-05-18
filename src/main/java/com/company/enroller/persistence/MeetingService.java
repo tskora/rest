@@ -45,4 +45,22 @@ public class MeetingService {
 		transaction.commit();
 	}
 
+	public void addParticipantToMeeting(Participant participant, Meeting meeting) {
+		Transaction transaction = connector.getSession().beginTransaction();
+		meeting.addParticipant(participant);
+		connector.getSession().update(meeting);
+		transaction.commit();
+	}
+
+	public Collection<Participant> getMeetingParticipants(long id) {
+		return findById(id).getParticipants();
+	}
+
+	public void deleteParticipantFromMeeting(Participant participant, Meeting meeting) {
+		Transaction transaction = connector.getSession().beginTransaction();
+		meeting.removeParticipant(participant);
+		connector.getSession().update(meeting);
+		transaction.commit();
+	}
+
 }

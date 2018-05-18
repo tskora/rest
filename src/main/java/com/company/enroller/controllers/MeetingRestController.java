@@ -22,6 +22,9 @@ public class MeetingRestController {
 
 	@Autowired
 	MeetingService meetingService;
+	
+	@Autowired
+	ParticipantService participantService;
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public ResponseEntity<?> getMeetings() {
@@ -69,6 +72,44 @@ public class MeetingRestController {
 		meetingUpdate.setId(id);
 		meetingService.updateMeeting(meetingUpdate);
 		return new ResponseEntity<Meeting>(meetingUpdate, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/{meetingId}/participants/{participantId}", method = RequestMethod.PUT)
+	public ResponseEntity<?> addParticipantToMeeting(
+			@PathVariable("meetingId") long id,
+			@PathVariable("participantId") String login){
+		
+		Participant participant = participantService.findByLogin(login);
+		Meeting meeting = meetingService.findById(id);
+		if (participant == null || meeting == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		meetingService.addParticipantToMeeting(participant,meeting);
+		return new ResponseEntity<Participant>(participant, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/{meetingId}/participants", method = RequestMethod.GET)
+	public ResponseEntity<?> getParticipantsFromMeeting(@PathVariable("meetingId") long id) {
+		Meeting meeting = meetingService.findById(id);
+		if (meeting == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		Collection<Participant> participants = meetingService.getMeetingParticipants(id);
+		return new ResponseEntity<Collection<Participant>>(participants, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/{meetingId}/participants/{participantId}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteParticipantFromMeeting(
+			@PathVariable("meetingId") long id,
+			@PathVariable("participantId") String login){
+		
+		Participant participant = participantService.findByLogin(login);
+		Meeting meeting = meetingService.findById(id);
+		if (participant == null || meeting == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		meetingService.deleteParticipantFromMeeting(participant,meeting);
+		return new ResponseEntity<Participant>(participant, HttpStatus.OK);
 	}
 
 }
